@@ -1,0 +1,87 @@
+---
+title: 'Project Machine Learning for Retail with R: Product Packaging'
+author: "Marwan Musa"
+date: '2022-04-01'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+1. Machine Learning for Retail
+- Dataset Transaksi Penjualan
+```{r}
+library(arules)
+transaksi_tabular <- read.transactions(file="https://storage.googleapis.com/dqlab-dataset/transaksi_dqlab_retail.tsv", format="single", sep="\t", cols=c(1,2), skip=1)
+write(transaksi_tabular, file="test_project_retail_1.txt", sep=",")
+```
+
+- Output Awal: Statistik Top 10
+```{r}
+library(arules)
+transaksi_tabular <- read.transactions(file="transaksi_dqlab_retail.tsv", format="single", sep="\t", cols=c(1,2), skip=1)
+
+all_item <- itemFrequency(transaksi_tabular, type = "absolute")
+names(all_item)
+```
+
+- Melihat data dengan visualisasi
+```{r}
+itemFrequencyPlot(transaksi_tabular, topN = 10, type = "absolute")
+```
+
+```{r}
+library(arules)
+data <- read.transactions(file = "transaksi_dqlab_retail.tsv", format = "single", sep = "\t", cols = c(1,2), skip = 1)
+
+
+top10 <- sort(itemFrequency(data, type = "absolute"), decreasing = TRUE)[1:10]
+hasil <- data.frame("Nama Produk" = names(top10), "Jumlah" = top10, row.names = NULL)
+hasil
+write.csv(hasil, file="top10_item_retail.txt")
+```
+
+- Output Awal: Statistik Top 10
+```{r}
+
+bottom10 <- sort(itemFrequency(transaksi_tabular, type="absolute"), decreasing = FALSE)[1:10]
+hasil <- data.frame("Nama Produk" = names(bottom10), "Jumlah Produk" = bottom10, row.names = NULL)
+hasil
+write.csv(hasil, file = "bottom10_item_retail.txt")
+```
+
+- Mendapatkan Kombinasi Produk yang menarik
+syarat :
+##Memiliki asosiasi atau hubungan erat.
+##Kombinasi produk minimal 2 item, dan maksimum 3 item.
+##Kombinasi produk itu muncul setidaknya 10 dari dari seluruh transaksi.
+##Memiliki tingkat confidence minimal 50 persen.
+
+```{r}
+library(arules)
+#read data
+data <- read.transactions(file = "transaksi_dqlab_retail.tsv", format = "single", sep = "\t", cols = c(1,2), skip = 1)
+#combination requirement to apriori func.
+apr.comb <- apriori(data, parameter = list(supp = 10/length(data), confidence = 0.5, minlen = 2, maxlen = 3))
+combination <- head(apr.comb, n = 10, by = "lift")
+combination
+inspect(combination)
+write(combination, file = "kombinasi_retail.txt")
+```
+
+- Mencari Paket Produk yang bisa dipasangkan dengan Item Slow-Moving
+```{r}
+library(arules)
+data <- read.transactions(file = "transaksi_dqlab_retail.tsv", format = "single", sep = "\t", cols = c(1,2), skip = 1)
+slowmove_comb <- apriori(data, list(supp = 10/length(data), confidence = 0.1, minlen = 2, maxlen = 3))
+c1 <- subset(slowmove_comb, rhs %in% "Tas Makeup")
+hasilc1 <- head(sort(c1, by = "lift", decreasing = TRUE), 3)
+c2 <- subset(slowmove_comb, rhs %in% "Baju Renang Pria Anak-anak")
+hasilc2 <- head(sort(c2, by = "lift", decreasing = TRUE), 3)
+fullhasil <- c(hasilc1, hasilc2)
+write(fullhasil, file = "kombinasi_retail_slow_moving.txt")
+```
+
