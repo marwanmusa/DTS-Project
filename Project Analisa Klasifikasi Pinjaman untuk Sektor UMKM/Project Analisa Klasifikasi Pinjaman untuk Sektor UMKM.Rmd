@@ -1,8 +1,10 @@
 ---
 title: "Project Analisa Klasifikasi Pinjaman untuk Sektor UMKM"
 author: "Marwan Musa"
-date: '2022-04-05'
-output: html_document
+date: "2022-04-05"
+output:
+  html_notebook: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
