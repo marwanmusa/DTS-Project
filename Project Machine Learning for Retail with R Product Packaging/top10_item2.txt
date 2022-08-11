@@ -1,0 +1,11 @@
+"Nama.Produk""Jumlah.Produk"
+"1""Shampo Biasa"0.601449275362319
+"2""Serum Vitamin"0.488405797101449
+"3""Baju Batik Wanita"0.380289855072464
+"4""Baju Kemeja Putih"0.363768115942029
+"5""Celana Jogger Casual"0.329275362318841
+"6""Cover Koper"0.314782608695652
+"7""Sepatu Sandal Anak"0.307826086956522
+"8""Tali Pinggang Gesper Pria"0.290724637681159
+"9""Sepatu Sport merk Z"0.257391304347826
+"10""Wedges Hitam"0.246086956521739
